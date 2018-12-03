@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.info_system.dao.BlogDao">
+
+    <resultMap id="blogMap" type="com.info_system.entity.Blog">
+        <id property="blogId" column="blog_id"/>
+        <result property="blogTitle" column="blog_title"/>
+        <result property="blogContent" column="blog_content"/>
+        <result property="blogTime" column="blog_time"/>
+        <result property="deleteFlag" column="delete_flag"/>
+        <result property="blogPic" column="blog_pic"/>
+        <association property="likeCount" column="blog_id" javaType="java.lang.Integer" select="com.info_system.dao.BlogDao.getLikeCountByBlogId"/>
+        <association property="commentCount" column="blog_id" javaType="java.lang.Integer" select="com.info_system.dao.BlogDao.getCommentCountByBlogId"/>
+        <association property="user" column="user_id" javaType="com.info_system.entity.User" select="com.info_system.dao.UserDao.getUserById"/>
+    </resultMap>
+
+    <select id="getCommentCountByBlogId" resultType="java.lang.Integer">
+        select count(*) from t_commentblog where blog_id=#{0}
+    </select>
+
+    <select id="getLikeCountByBlogId" resultType="java.lang.Integer">
+        select count(*) from t_likeblog where blog_id=#{0}
+    </select>
+
+    <insert id="addBlog" parameterType="com.info_system.entity.Blog">
+        insert into t_blog(blog_title,blog_content,user_id,blog_time,delete_flag,blog_pic) values(#{blogTitle},#{blogContent},#{user.id},#{blogTime},#{deleteFlag},#{blogPic})
+    </insert>
+
+    <select id="getBlogById" parameterType="java.lang.Integer" resultMap="blogMap">
+        select * from t_blog where blog_id=#{0}
+    </select>
+
+    <select id="updateByPrimaryKey" parameterType="com.info_system.entity.Blog">
+        update t_blog set
+        <if test="blogId>=0">
+          blog_id=#{blogId}
+        </if>
+        <if test="blogTitle!=null">
+            blog_title=#{blogTitle},
+        </if>
+        <if test="blogContent!=null">
+            blog_content=#{blogContent}
+        </if>
+        <if test="user!=null">
+            user_id=#{user.userId}
+        </if>
+        <if test="blogTime!=null">
+          blog_time=#{blogTime}
+        </if>
+
+        <if test="blogPic!=null">
+            blog_pic=#{blogPic}
+        </if>
+
+        <if test="deleteFlag!=null">
+            delete_flag=#{deleteFlag}
+        </if>
+    </select>
+
+    <select id="getAllBlogs" resultMap="blogMap">
+        select * from t_blog a
+    </select>
+
+    <select id="getLikeNumByUser" resultType="java.lang.Integer">
+        select  count(*) from t_likeblog where  t_likeblog.blog_id=#{blogId} and t_likeblog.user_id=#{userId}
+    </select>
+
+    <select id="getCommentNumByUser" resultType="java.lang.Integer">
+        select  count(*) from t_commentblog where  t_commentblog.blog_id=#{blogId} and t_commentblog.user_id=#{userId}
+    </select>
+
+</mapper>
