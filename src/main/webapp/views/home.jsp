@@ -23,6 +23,9 @@
             width:100%;
             height:160px
         }
+
+        a{text-decoration:none;color:#666;display:inline-block;}
+        a:hover{color:#666;text-decoration:none;}
     </style>
 </head>
 <body>
@@ -47,50 +50,56 @@
                 <Row>
                     <i-col span="6" v-if="item.blogPic!=null">
                         <div style="border:solid 0.1pt;padding:10px;border-color: #E5DDDB">
-                            <img :src="'<%=basePath%>'+item.blogPic" class="goods-item-img">
+                            <a  @click="turnToDetail(item)">
+                                <img :src="'<%=basePath%>'+item.blogPic" class="goods-item-img">
+                            </a>
+
                         </div>
                     </i-col>
                     <i-col span="17" offset="1" style="margin-top:10px">
-                        <div><span style="font-size: 15pt">{{item.blogTitle}}</span></div>
-                        <div style="height:100px">
-                            <p>{{item.blogContent}}</p>
-                        </div>
-                        <div>
-                            <Row>
-                                <i-col span="1">
-                                    <Avatar icon="ios-person" size="small" src="../img/cat.jpg" />
-                                </i-col>
-                                <i-col span="1">
-                                    <span style="font-size: 10pt">{{item.user.username}}</span>
-                                </i-col>
-                                <i-col span="5" offset="1">
-                                    <span style="font-size: 10pt">{{item.blogTime}}</span>
-                                </i-col>
-                                <i-col span="1" offset="10" v-if="item.hasLike">
-                                    <a @click="doLike(item)"><Icon type="md-thumbs-up" color="#E34118"/></a>
+                        <a @click="turnToDetail(item)">
+                            <div><span style="font-size: 15pt">{{item.blogTitle}}</span></div>
+                            <div style="height:100px">
+                                <p>{{item.blogContent}}</p>
+                            </div>
+                        </a>
+                            <div>
+                                <Row>
+                                    <i-col span="1">
+                                        <Avatar icon="ios-person" size="small" src="../img/cat.jpg" />
+                                    </i-col>
+                                    <i-col span="1">
+                                        <span style="font-size: 10pt">{{item.user.username}}</span>
+                                    </i-col>
+                                    <i-col span="5" offset="1">
+                                        <span style="font-size: 10pt">{{item.blogTime}}</span>
+                                    </i-col>
+                                    <i-col span="1" offset="10" v-if="item.hasLike">
+                                        <a @click="doLike(item)"><Icon type="md-thumbs-up" color="#2d8cf0"/></a>
 
-                                </i-col>
-                                <i-col span="1" offset="10" v-else>
-                                    <a @click="doLike(item)"><Icon type="md-thumbs-up" color="#A3A2A1"/></a>
-                                </i-col>
-                                <i-col span="1">
-                                    <span>{{item.likeCount}}&nbsp;&nbsp; |</span>
-                                </i-col>
+                                    </i-col>
+                                    <i-col span="1" offset="10" v-else>
+                                        <a @click="doLike(item)"><Icon type="md-thumbs-up" color="#A3A2A1"/></a>
+                                    </i-col>
+                                    <i-col span="1">
+                                        <span>{{item.likeCount}}&nbsp;&nbsp; |</span>
+                                    </i-col>
 
-                                <i-col span="1" v-if="item.hasComment">
-                                    &nbsp;
-                                   <a @click="doComment(item)"><Icon type="md-chatboxes" color="#E34118"/></a>
-                                </i-col>
-                                <i-col span="1" v-else>
-                                    &nbsp;
-                                    <a @click="doComment(item)"><Icon type="md-chatboxes" color="#A3A2A1"/></a>
-                                </i-col>
+                                    <i-col span="1" v-if="item.hasComment">
+                                        &nbsp;
+                                        <a><Icon type="md-chatboxes" color="#2d8cf0"/></a>
+                                    </i-col>
+                                    <i-col span="1" v-else>
+                                        &nbsp;
+                                        <a><Icon type="md-chatboxes" color="#A3A2A1"/></a>
+                                    </i-col>
 
-                                <i-col span="1">
-                                    <span>{{item.commentCount}}</span>
-                                </i-col>
-                            </Row>
-                        </div>
+                                    <i-col span="1">
+                                        <span>{{item.commentCount}}</span>
+                                    </i-col>
+                                </Row>
+                            </div>
+
 
                     </i-col>
                 </Row>
@@ -125,38 +134,38 @@
                     //将时间戳转换为日期
                     app.allBlogList[i].blogTime=getTime(app.allBlogList[i].blogTime);
                 }
-                console.log(app.allBlogList);
             }
         },null,false);
     });
 
     //点赞
     function doLike(item){
-        console.log("点击了方法");
-        if(app.item.hasLike){
-            app.item.hasLike=false;
-            app.item.likeCount-=1;
-        }else{
-            app.item.hasLike=true;
-            app.item.likeCount+=1;
-        }
-        //发送请求改变后端数据库的点赞
+        var data={
+            blogId:item.blogId
+        };
+        console.log(item);
+        if(item.hasLike==true){
+            item.hasLike=false;
+            item.likeCount-=1;
+            ajaxPost("/info_system/deleteBlogLike",data,function(res){
 
+            },null,false);
+        }else{
+            item.hasLike=true;
+            item.likeCount+=1;
+            ajaxPost("/info_system/addBlogLike",data,function(res){
+
+            },null,false);
+        }
     }
 
-    //评论
-    function doComment(item){
-        if(app.item.hasComment){
-            app.item.hasComment=false;
-            app.item.commentCount-=1;
-        }else{
-            app.item.hasComment=true;
-            app.item.commentCount+=1;
-        }
-        //发送请求改变后端数据库的评论
-
-
+    //跳转到微博详细页面
+    function turnToDetail(item){
+        console.log("进入方法");
+        parent.app.page="<%=basePath%>/info_system/blogDetail?blogId="+item.blogId;
     }
+
+
 </script>
 </body>
 </html>

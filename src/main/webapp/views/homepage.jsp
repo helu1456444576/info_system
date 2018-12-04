@@ -140,6 +140,10 @@
         }else if(name=="sendBlog"){
             //跳转到发博文页面
             app.page="<%=basePath%>/info_system/sendBlog"
+        }else if(name=="myBlog"){
+            app.page="<%=basePath%>/info_system/myBlogs"
+        }else if(name=="myComment"){
+            app.page="<%=basePath%>/info_system/myComment"
         }
     }
 </script>

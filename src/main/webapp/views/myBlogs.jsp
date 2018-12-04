@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: 折一架铁飞机
-  Date: 2018/11/29
-  Time: 11:40
+  Date: 2018/12/4
+  Time: 19:39
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -14,10 +14,10 @@
 %>
 <html>
 <head>
-    <title>我的评论</title>
+    <title>我的博文</title>
     <link rel="stylesheet" type="text/css" href="//unpkg.com/iview/dist/styles/iview.css">
     <link rel="stylesheet" type="text/css" href="../css/layout.css">
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div id="app" v-cloak>
@@ -27,31 +27,40 @@
         <thead>
         <tr style="font-size: 15px;">
             <%--<th style="width: 50px;">--%>
-            <%--<Checkbox @on-change="checkAll()"  v-model="viewModel.allChecked" style="margin-left: 8px;">--%>
-            <%--</Checkbox>--%>
+                <%--<Checkbox @on-change="checkAll()"  v-model="viewModel.allChecked" style="margin-left: 8px;">--%>
+                <%--</Checkbox>--%>
             <%--</th>--%>
-                <th style="text-align: center">评论博客主题</th>
-            <th style="text-align: center">评论内容</th>
-            <th style="text-align: center">时间</th>
+            <th align="center" style="text-align: center">图片</th>
+            <th style="text-align: center">主题</th>
+            <th style="text-align: center">内容</th>
+                <th style="text-align: center">时间</th>
             <th style="text-align: center">点赞数</th>
+            <th style="text-align: center">评论数</th>
             <th style="text-align: center">显示状态</th>
+            <th style="text-align: center">查看</th>
         </tr>
         </thead>
         <tbody>
-        <tr v-for="(item,index) in commentList">
+        <tr v-for="(item,index) in blogList">
             <%--<td>--%>
-            <%--<Checkbox v-model="item.checked" style="margin-left: 8px;" :key="item.id"></Checkbox>--%>
+                <%--<Checkbox v-model="item.checked" style="margin-left: 8px;" :key="item.id"></Checkbox>--%>
             <%--</td>--%>
-                <td style="text-align: center">{{item.blog.blogContent}}（<a @click="turnToDetail(item.blog)"><span>查看博客详情</span></a>）</td>
 
-            <td style="text-align: center">{{item.commentContent}}</td>
-            <td style="text-align: center">{{item.commentTime}}</td>
-            <td style="text-align: center">{{item.commentCount}}</td>
+            <td style="text-align: center">
+                <img :src="'<%=basePath%>'+item.blogPic" style="width: 100px;"/>
+            </td>
+            <td style="text-align: center">{{item.blogTitle}}</td>
+            <td style="text-align: center">{{item.blogContent}}</td>
+                <td style="text-align: center">{{item.blogTime}}</td>
+            <td style="text-align: center">{{item.likeCount}}</td>
+                <td style="text-align: center">{{item.commentCount}}</td>
             <td style="text-align: center"><i-switch v-model="item.deleteFlag" @on-change="changeStatus(item.deleteFlag,item,index)"></i-switch></td>
+                <td style="text-align: center"><a @click="turnToDetail(item)">查看详细</a></td>
         </tr>
         </tbody>
     </table>
 </div>
+
 <script src="../js/ajax.js"></script>
 <script src="../js/jquery-2.1.1.min.js"></script>
 <script src="../js/jquery-2.0.0.min.js"></script>
@@ -60,40 +69,42 @@
 <script src="../js/vue.min.js"></script>
 <script src="../js/iview.min.js"></script>
 <script src="../js/homepage.js"></script>
+
 <script type="text/javascript">
     var app = new Vue({
         el: "#app",
         data:{
-            commentList:[]
+            blogList:[],
         }
+
     });
 
     $(document).ready(function(){
-       var url="<%=basePath%>/info_system/getMyComments";
-       ajaxGet(url,function(res){
-           if(res.code=="success"){
-               app.commentList=res.data;
-               for(var i=0;i<res.data.length;i++){
-                   app.commentList[i].commentTime=getTime(app.commentList[i].commentTime);
-                   if(app.commentList[i].deleteFlag==1){
-                       app.commentList[i].deleteFlag=true;
-                   }else{
-                       app.commentList[i].deleteFlag=false;
-                   }
-               }
-           }
-       },null,false);
+        var url="<%=basePath%>/info_system/getMyBlogList";
+        ajaxGet(url,function(res){
+            if(res.code=="success"){
+                app.blogList=res.data;
+                for(var i=0;i<res.data.length;i++){
+                    app.blogList[i].blogTime=getTime(app.blogList[i].blogTime);
+                    if(app.blogList[i].deleteFlag==1){
+                        app.blogList[i].deleteFlag=true;
+                    }else{
+                        app.blogList[i].deleteFlag=false;
+                    }
+                }
+            }
+        },null,false)
     });
 
     function changeStatus(deleteFlag,item,index){
         var data={
             deleteFlag:deleteFlag,
-            commentId:item.commentId
+            blogId:item.blogId
         };
-        var url="<%=basePath%>/info_system/updateCommentDeleteFlag";
+        var url="<%=basePath%>/info_system/updateDeleteFlag";
         ajaxPost(url,data,function(res){
             if(res.code=="success"){
-                app.commentList[index].deleteFlag=res.data;
+                app.blogList[index].deleteFlag=res.data;
             }
         },null,false)
     }
@@ -102,6 +113,7 @@
         console.log("进入方法");
         parent.app.page="<%=basePath%>/info_system/blogDetail?blogId="+item.blogId;
     }
+
 </script>
 </body>
 </html>

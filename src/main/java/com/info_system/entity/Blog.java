@@ -117,6 +117,8 @@ public class Blog {
                 ", blogTime=" + blogTime +
                 ", deleteFlag=" + deleteFlag +
                 ", blogPic='" + blogPic + '\'' +
+                ", hasLike=" + hasLike +
+                ", hasComment=" + hasComment +
                 ", likeCount=" + likeCount +
                 ", commentCount=" + commentCount +
                 '}';

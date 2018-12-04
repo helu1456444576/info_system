@@ -4,6 +4,24 @@ public class LikeBlog {
     private int likeId;
     private Blog blog;
     private User user;
+    private int blogId;
+    private int userId;
+
+    public int getBlogId() {
+        return blogId;
+    }
+
+    public void setBlogId(int blogId) {
+        this.blogId = blogId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public int getLikeId() {
         return likeId;
@@ -35,6 +53,8 @@ public class LikeBlog {
                 "likeId=" + likeId +
                 ", blog=" + blog +
                 ", user=" + user +
+                ", blogId=" + blogId +
+                ", userId=" + userId +
                 '}';
     }
 }

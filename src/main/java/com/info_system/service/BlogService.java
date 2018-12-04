@@ -3,8 +3,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.info_system.dao.BlogDao;
 import com.info_system.dto.AjaxMessage;
 import com.info_system.dto.MsgType;
-import com.info_system.entity.Blog;
-import com.info_system.entity.User;
+import com.info_system.entity.*;
 
 
 import com.info_system.utils.FileUtils;
@@ -84,4 +83,54 @@ public class BlogService {
         return blogDao.getCommentNumByUser(blogId,userId);
     }
 
+    public Blog getBlogById(int blogId){
+        return blogDao.getBlogById(blogId);
+    }
+
+    public List<Comment> getCommentByBlogId(int blogId){
+        return blogDao.getCommentByBlogId(blogId);
+    }
+
+    public int addMyComment(Comment comment){
+        return blogDao.addMyComment(comment);
+    }
+
+    public int getCommentLikeCount(int commentId){
+        return blogDao.getCommentLikeCount(commentId);
+    }
+
+    public int deleteCommentByCommentAndUser(int commentId,int userId){
+        return blogDao.deleteCommentByCommentAndUser(commentId,userId);
+    }
+
+    public int insertCommentLikeByUserAndComment(LikeComment likeComment){
+        return blogDao.insertCommentLikeByUserAndComment(likeComment);
+    }
+
+    public Comment getCommentByCommentId(int commentId){
+        return blogDao.getCommentByCommentId(commentId);
+    }
+
+    public int addBlogLike(LikeBlog likeBlog){
+        return blogDao.addBlogLike(likeBlog);
+    }
+
+    public int deleteBlogLike(int blogId,int userId){
+        return blogDao.deleteBlogLike(blogId,userId);
+    }
+
+    public List<Blog> getMyAllBlogs(int userId){
+        return blogDao.getMyAllBlogs(userId);
+    }
+
+    public  int updateDeleteFlag(int deleteFlag,int blogId){
+        return blogDao.updateDeleteFlag(deleteFlag,blogId);
+    }
+
+    public int updateCommentDeleteFlag(int deleteFlag,int commentId){
+        return blogDao.updateCommentDeleteFlag(deleteFlag, commentId);
+    }
+    public List<Comment> getMyComments(int userId){
+        return blogDao.getMyComments(userId);
+    }
 }

@@ -8,6 +8,42 @@ public class Comment {
     private User user;
     private String commentContent;
     private Date commentTime;
+    private int blogId;
+    private int userId;
+    private boolean hasComment;
+    private int commentCount;
+
+    public boolean isHasComment() {
+        return hasComment;
+    }
+
+    public void setHasComment(boolean hasComment) {
+        this.hasComment = hasComment;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public int getBlogId() {
+        return blogId;
+    }
+
+    public void setBlogId(int blogId) {
+        this.blogId = blogId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public int getCommentId() {
         return commentId;
@@ -57,6 +93,10 @@ public class Comment {
                 ", user=" + user +
                 ", commentContent='" + commentContent + '\'' +
                 ", commentTime=" + commentTime +
+                ", blogId=" + blogId +
+                ", userId=" + userId +
+                ", hasComment=" + hasComment +
+                ", commentCount=" + commentCount +
                 '}';
     }
 }
