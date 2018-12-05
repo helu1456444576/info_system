@@ -14,17 +14,44 @@
         <association property="likeCount" column="blog_id" javaType="java.lang.Integer" select="com.info_system.dao.BlogDao.getLikeCountByBlogId"/>
         <association property="commentCount" column="blog_id" javaType="java.lang.Integer" select="com.info_system.dao.BlogDao.getCommentCountByBlogId"/>
         <association property="user" column="user_id" javaType="com.info_system.entity.User" select="com.info_system.dao.UserDao.getUserById"/>
+        <collection property="informUser" column="blog_id" javaType="java.util.List" ofType="com.info_system.entity.User" select="com.info_system.dao.BlogDao.getInformUserByBlogId"/>
     </resultMap>
 
     <resultMap id="commentMap" type="com.info_system.entity.Comment">
         <id property="commentId" column="comment_id"/>
         <result property="commentContent" column="comment_content"/>
         <result property="commentTime" column="comment_time"/>
+        <result property="deleteFlag" column="delete_flag"/>
         <association property="blog" column="blog_id" javaType="com.info_system.entity.Blog" select="com.info_system.dao.BlogDao.getBlogById"/>
         <association property="user" column="user_id" javaType="com.info_system.entity.User" select="com.info_system.dao.UserDao.getUserById"/>
         <association property="commentCount" column="comment_id" javaType="java.lang.Integer" select="com.info_system.dao.BlogDao.getCommentLikeCount"/>
     </resultMap>
 
+    <resultMap id="userMap" type="com.info_system.entity.User">
+        <id property="id" column="user_id"/>
+        <result property="username" column="user_name"/>
+        <result property="deleteFlag" column="delete_flag"/>
+        <association property="fansNum" column="user_id" javaType="java.lang.Integer" select="com.info_system.dao.BlogDao.getFansNumByUserId"/>
+        <association property="blogNum" column="user_id" javaType="java.lang.Integer" select="com.info_system.dao.BlogDao.getBlogNumByUserId"/>
+    </resultMap>
+
+    <select id="getInformUserByBlogId" resultMap="userMap">
+        select * from t_user where user_id in (
+          select t_inform.user_id from t_inform where t_inform.blog_id=#{0}
+        )
+    </select>
+
+    <select id="getFansNumByUserId" resultType="java.lang.Integer">
+        select count(*) from t_follow where user_id=#{0}
+    </select>
+
+    <select id="getBlogNumByUserId" resultType="java.lang.Integer">
+        select  count(*) from t_blog where user_id=#{0}
+    </select>
+
+    <select id="getDetailUserById" resultMap="userMap">
+        select * from t_user where user_id=#{0}
+    </select>
     <select id="getCommentLikeCount" resultType="java.lang.Integer">
         select count(*) from t_commentLike where comment_id=#{0}
     </select>
@@ -36,13 +63,14 @@
         select count(*) from t_likeblog where blog_id=#{0}
     </select>
 
-    <insert id="addBlog" parameterType="com.info_system.entity.Blog">
+    <insert id="addBlog" parameterType="com.info_system.entity.Blog" useGeneratedKeys="true" keyProperty="blogId">
         insert into t_blog(blog_title,blog_content,user_id,blog_time,delete_flag,blog_pic) values(#{blogTitle},#{blogContent},#{user.id},#{blogTime},1,#{blogPic})
     </insert>
 
     <select id="getBlogById" parameterType="java.lang.Integer" resultMap="blogMap">
-        select * from t_blog where blog_id=#{0} where delete_flag=1
+        select * from t_blog where blog_id=#{0} and delete_flag=1
     </select>
+
 
     <select id="updateByPrimaryKey" parameterType="com.info_system.entity.Blog">
         update t_blog set
@@ -72,7 +100,7 @@
     </select>
 
     <select id="getAllBlogs" resultMap="blogMap">
-        select * from t_blog a where delete_flag=1
+        select * from t_blog a where a.delete_flag=1
     </select>
 
     <select id="getLikeNumByUser" resultType="java.lang.Integer">
@@ -92,7 +120,7 @@
     </select>
 
     <select id="getMyComments" resultMap="commentMap">
-        select * from t_commentblog where user_id=#{userId} and delete_flag=1
+        select * from t_commentblog where user_id=#{userId} order by comment_time desc
     </select>
     <!--插入一条评论返回这条评论的id-->
     <insert id="addMyComment" parameterType="com.info_system.entity.Comment" useGeneratedKeys="true" keyProperty="commentId">
@@ -130,4 +158,16 @@
     <update id="updateCommentDeleteFlag">
         update t_commentblog set delete_flag=#{deleteFlag} where comment_id=#{commentId}
     </update>
+
+    <select id="getAllUser" resultMap="userMap">
+        select * from t_user
+    </select>
+
+    <insert id="addInform" parameterType="com.info_system.entity.Inform">
+        insert into t_inform (blog_id,user_id) values (#{blogId},#{userId})
+    </insert>
+
+    <insert id="addMessage" parameterType="com.info_system.entity.Message">
+        insert into t_message(message_type,user_id,blog_id,sender_id) values(#{messageType},#{userId},#{blogId},#{senderId})
+    </insert>
 </mapper>

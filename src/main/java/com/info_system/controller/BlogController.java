@@ -4,6 +4,7 @@ import com.info_system.dto.AjaxMessage;
 import com.info_system.dto.MsgType;
 import com.info_system.entity.*;
 import com.info_system.service.BlogService;
+import com.info_system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,8 @@ import java.util.List;
 public class BlogController {
     @Autowired
     private BlogService blogService;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = "/sendBlog")
     public String sendBlog(HttpSession session, HttpServletRequest request)
@@ -50,6 +53,29 @@ public class BlogController {
         return blogService.addBlog(session,request);
     }
 
+
+    @RequestMapping(value="/otherBlogs")
+    public String otherBlogs(Model model,@RequestParam("userId") int userId){
+        model.addAttribute("userId",userId);
+        return "otherBlogs";
+    }
+
+    @RequestMapping(value="/getOtherBlogs")
+    @ResponseBody
+    public Object getOtherBlogs(@RequestParam("userId") int userId){
+        User user=blogService.getDetailUserById(userId);
+        List<Blog> blogList=blogService.getMyAllBlogs(userId);
+        HashMap<String,Object> map=new HashMap<String, Object>();
+
+        if(user!=null){
+            map.put("user",user);
+            map.put("blogList",blogList);
+            return new AjaxMessage().Set(MsgType.Success,map);
+        }
+
+        return new AjaxMessage().Set(MsgType.Error,null);
+
+    }
 
     @RequestMapping(value="/getAllBlogs")
     @ResponseBody
@@ -255,6 +281,17 @@ public class BlogController {
         }
         if(blogService.updateCommentDeleteFlag(flag,commentId)>=0){
             return new AjaxMessage().Set(MsgType.Success,flagB);
+        }
+        return new AjaxMessage().Set(MsgType.Error,null);
+    }
+
+
+    @RequestMapping(value="/getAllUserList")
+    @ResponseBody
+    public Object getAllUserList(HttpServletRequest request){
+        List<User> userList=blogService.getAllUser();
+        if(userList.size()>=0){
+            return new AjaxMessage().Set(MsgType.Success,userList);
         }
         return new AjaxMessage().Set(MsgType.Error,null);
     }

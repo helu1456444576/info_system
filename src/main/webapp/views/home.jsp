@@ -20,93 +20,104 @@
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <style>
         .goods-item-img{
-            width:100%;
-            height:160px
+            width:70%;
+            height:70%;
+            margin-top:10%
         }
 
         a{text-decoration:none;color:#666;display:inline-block;}
-        a:hover{color:#666;text-decoration:none;}
+        a:hover{text-decoration:none;}
     </style>
 </head>
 <body>
-<div v-cloak id="app">
-   <div style="margin-left:10%;width:80%;margin-right:10%">
-       <carousel v-model="value1" loop style="width:100%;margin-top:30px" autoplay>
-           <carousel-item>
-               <img  src="../img/cat.jpg" alt="太帅 无法加载">
-           </carousel-item>
-           <carousel-item>
-               <img  src="../img/cat.jpg" alt="太帅 无法加载">
-           </carousel-item>
-           <carousel-item>
-               <img  src="../img/cat.jpg" alt="太帅 无法加载">
-           </carousel-item>
-           <carousel-item>
-               <img  src="../img/cat.jpg" alt="太帅 无法加载">
-           </carousel-item>
-       </carousel>
-       <div style="margin-top:30px;width:100%" v-for="item in allBlogList">
-            <div>
-                <Row>
-                    <i-col span="6" v-if="item.blogPic!=null">
-                        <div style="border:solid 0.1pt;padding:10px;border-color: #E5DDDB">
-                            <a  @click="turnToDetail(item)">
-                                <img :src="'<%=basePath%>'+item.blogPic" class="goods-item-img">
-                            </a>
+<div v-cloak id="app" style="height:100%">
 
-                        </div>
-                    </i-col>
-                    <i-col span="17" offset="1" style="margin-top:10px">
-                        <a @click="turnToDetail(item)">
-                            <div><span style="font-size: 15pt">{{item.blogTitle}}</span></div>
-                            <div style="height:100px">
-                                <p>{{item.blogContent}}</p>
-                            </div>
-                        </a>
-                            <div>
-                                <Row>
-                                    <i-col span="1">
-                                        <Avatar icon="ios-person" size="small" src="../img/cat.jpg" />
-                                    </i-col>
-                                    <i-col span="1">
-                                        <span style="font-size: 10pt">{{item.user.username}}</span>
-                                    </i-col>
-                                    <i-col span="5" offset="1">
-                                        <span style="font-size: 10pt">{{item.blogTime}}</span>
-                                    </i-col>
-                                    <i-col span="1" offset="10" v-if="item.hasLike">
-                                        <a @click="doLike(item)"><Icon type="md-thumbs-up" color="#2d8cf0"/></a>
-
-                                    </i-col>
-                                    <i-col span="1" offset="10" v-else>
-                                        <a @click="doLike(item)"><Icon type="md-thumbs-up" color="#A3A2A1"/></a>
-                                    </i-col>
-                                    <i-col span="1">
-                                        <span>{{item.likeCount}}&nbsp;&nbsp; |</span>
-                                    </i-col>
-
-                                    <i-col span="1" v-if="item.hasComment">
-                                        &nbsp;
-                                        <a><Icon type="md-chatboxes" color="#2d8cf0"/></a>
-                                    </i-col>
-                                    <i-col span="1" v-else>
-                                        &nbsp;
-                                        <a><Icon type="md-chatboxes" color="#A3A2A1"/></a>
-                                    </i-col>
-
-                                    <i-col span="1">
-                                        <span>{{item.commentCount}}</span>
-                                    </i-col>
-                                </Row>
-                            </div>
-
-
-                    </i-col>
-                </Row>
+                <h1>热门博客</h1>
+                <carousel v-model="value1" loop style="width:100%;margin-top:30px" autoplay>
+                    <carousel-item>
+                        <img  src="../img/cat.jpg" alt="太帅 无法加载">
+                    </carousel-item>
+                    <carousel-item>
+                        <img  src="../img/cat.jpg" alt="太帅 无法加载">
+                    </carousel-item>
+                    <carousel-item>
+                        <img  src="../img/cat.jpg" alt="太帅 无法加载">
+                    </carousel-item>
+                    <carousel-item>
+                        <img  src="../img/cat.jpg" alt="太帅 无法加载">
+                    </carousel-item>
+                </carousel>
                 <hr/>
-            </div>
-       </div>
-   </div>
+                <div style="padding-top:40px">
+                    <div style="width:100%;height:150px" v-for="item in allBlogList">
+                        <div>
+                            <Row>
+                                <i-col span="4" v-if="item.blogPic!=null">
+                                    <div style="border:solid 0.1pt;border-color: #E5DDDB;text-align: center;height:70%">
+                                        <a @click="turnToDetail(item)">
+                                            <img :src="'<%=basePath%>'+item.blogPic" class="goods-item-img">
+                                        </a>
+
+                                    </div>
+                                </i-col>
+                                <i-col span="17" offset="1" style="margin-top:10px">
+                                    <a @click="turnToDetail(item)">
+                                        <div><span style="font-size: 15pt">{{item.blogTitle}}</span></div>
+                                        <div style="height:50px">
+                                            <p>{{item.blogContent}}
+                                                <template v-for="informItem in item.informUser">
+                                                    <a @click="turnToDetailUser(informItem.id)">@{{informItem.username}}</a>
+                                                </template>
+                                            </p>
+
+                                        </div>
+                                    </a>
+                                    <div>
+                                        <Row>
+                                            <i-col span="1">
+                                                <a @click="turnToDetailUser(item.user.id)"><Avatar icon="ios-person" size="small" src="../img/cat.jpg" /></a>
+                                            </i-col>
+                                            <i-col span="1">
+                                                <span style="font-size: 10pt">{{item.user.username}}</span>
+                                            </i-col>
+                                            <i-col span="5" offset="1">
+                                                <span style="font-size: 10pt">{{item.blogTime}}</span>
+                                            </i-col>
+                                            <i-col span="1" offset="10" v-if="item.hasLike">
+                                                <a @click="doLike(item)"><Icon type="md-thumbs-up" color="#2d8cf0"/></a>
+
+                                            </i-col>
+                                            <i-col span="1" offset="10" v-else>
+                                                <a @click="doLike(item)"><Icon type="md-thumbs-up" color="#A3A2A1"/></a>
+                                            </i-col>
+                                            <i-col span="1">
+                                                <span>{{item.likeCount}}&nbsp;&nbsp; |</span>
+                                            </i-col>
+
+                                            <i-col span="1" v-if="item.hasComment">
+                                                &nbsp;
+                                                <a><Icon type="md-chatboxes" color="#2d8cf0"/></a>
+                                            </i-col>
+                                            <i-col span="1" v-else>
+                                                &nbsp;
+                                                <a><Icon type="md-chatboxes" color="#A3A2A1"/></a>
+                                            </i-col>
+
+                                            <i-col span="1">
+                                                <span>{{item.commentCount}}</span>
+                                            </i-col>
+                                        </Row>
+                                    </div>
+
+
+                                </i-col>
+                            </Row>
+                            <hr/>
+                        </div>
+                    </div>
+                </div>
+
+
 </div>
 
 <script src="../js/ajax.js"></script>
@@ -126,7 +137,10 @@
         }
     });
 
-    $(document).ready(function () {
+
+
+
+$(document).ready(function () {
         ajaxGet("/info_system/getAllBlogs",function(res){
             if(res.code=="success"){
                 app.allBlogList=res.data;
@@ -134,6 +148,7 @@
                     //将时间戳转换为日期
                     app.allBlogList[i].blogTime=getTime(app.allBlogList[i].blogTime);
                 }
+                console.log(app.allBlogList);
             }
         },null,false);
     });
@@ -161,8 +176,14 @@
 
     //跳转到微博详细页面
     function turnToDetail(item){
-        console.log("进入方法");
+
         parent.app.page="<%=basePath%>/info_system/blogDetail?blogId="+item.blogId;
+    }
+
+    //跳转到用户详细页面
+    function turnToDetailUser(userId){
+        console.log("进入方法");
+        parent.app.page="<%=basePath%>/info_system/otherBlogs?userId="+userId;
     }
 
 

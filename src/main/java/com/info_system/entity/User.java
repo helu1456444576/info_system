@@ -6,6 +6,27 @@ public class User {
     private String password;
     private int deleteFlag;
     private int adminFlag;
+    private int fansNum;
+
+    public int getFansNum() {
+        return fansNum;
+    }
+
+    public void setFansNum(int fansNum) {
+        this.fansNum = fansNum;
+    }
+
+    public int getBlogNum() {
+        return blogNum;
+    }
+
+    public void setBlogNum(int blogNum) {
+        this.blogNum = blogNum;
+    }
+
+    private int blogNum;
+
+
 
 
     public int getAdminFlag() {
@@ -65,6 +86,9 @@ public class User {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", deleteFlag=" + deleteFlag +
+                ", adminFlag=" + adminFlag +
+                ", fansNum=" + fansNum +
+                ", blogNum=" + blogNum +
                 '}';
     }
 }

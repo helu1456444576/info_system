@@ -13,6 +13,17 @@ public class Comment {
     private boolean hasComment;
     private int commentCount;
 
+    public int getDeleteFlag() {
+        return deleteFlag;
+    }
+
+    public void setDeleteFlag(int deleteFlag) {
+        this.deleteFlag = deleteFlag;
+    }
+
+    private  int deleteFlag;
+
+
     public boolean isHasComment() {
         return hasComment;
     }
@@ -97,6 +108,7 @@ public class Comment {
                 ", userId=" + userId +
                 ", hasComment=" + hasComment +
                 ", commentCount=" + commentCount +
+                ", deleteFlag=" + deleteFlag +
                 '}';
     }
 }

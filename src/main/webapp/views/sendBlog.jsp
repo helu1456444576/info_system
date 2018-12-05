@@ -21,14 +21,19 @@
 </head>
 <body>
 <div v-cloak id="app">
-    <Row>
-        <i-col span="12" offset="6">
+    <Row style="margin-top:30px">
+
             <i-form :model="formContent" :rules="validate" ref="form">
                 <form-item label="标题:" prop="blogTitle">
                     <i-input v-model="formContent.blogTitle" placeholder="输入标题" style="width:30%"></i-input>
                 </form-item>
                 <form-item label="内容:" prop="blogContent">
                     <i-input v-model="formContent.blogContent" type="textarea" :autosize="{minRows: 7,maxRows: 10}" placeholder="输入内容" style="width:80%"></i-input>
+                </form-item>
+                <form-item label="要@的人：" prop="informPerson">
+                    <i-select v-model="selectUser" multiple style="width:260px" placeholder="请选择">
+                        <i-option v-for="item in userList" :value="item.id" :key="item.id">{{ item.username}}</i-option>
+                    </i-select>
                 </form-item>
                 <form-item label="图片：" prop="goodsPic">
                     <%--<i-Input v-model="goods.goodsPic" type="text" maxlength="255" ></i-Input>--%>
@@ -56,16 +61,19 @@
                 </form-item>
 
             </i-form>
-        </i-col>
+
 
     </Row>
 
 </div>
 <script src="../js/ajax.js"></script>
 <script src="../js/jquery-2.1.1.min.js"></script>
+<script src="../js/jquery-2.0.0.min.js"></script>
+<script src="../js/common.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/vue.min.js"></script>
 <script src="../js/iview.min.js"></script>
+<script src="../js/homepage.js"></script>
 <script type="text/javascript">
     var app = new Vue({
         el: "#app",
@@ -79,13 +87,27 @@
                 file:null,
             },
             hasPic:false,
+            //所有的用户列表
+            userList:[],
+            //选择的要@的人
+            selectUser:[],
             // 验证规则
             validate: {
                 blogTitle:[{required: true, message: '标题不能为空', trigger: 'blur' }],
                 blogContent:[{required: true, message: '内容不能为空', trigger: 'blur' }],
             }
         }
-    })
+    });
+
+
+    $(document).ready(function(){
+        var url="<%=basePath%>/info_system/getAllUserList";
+        ajaxGet(url,function(res){
+            if(res.code=="success"){
+                 app.userList=res.data;
+            }
+        },null,false);
+    });
 
     //此函数放在app内部无作用，原因不明
     function handleBeforeUploadPic(file)
@@ -111,7 +133,8 @@
 
     // 提交表单
     function submit() {
-
+        console.log("进入方法");
+        console.log(app.selectUser);
         app.$refs["form"].validate(function (valid) {
             if (valid)
             {
@@ -121,6 +144,7 @@
                     formdata.append('uploadFile', app.photo.file);
                 }
                 formdata.append("blog",JSON.stringify(app.formContent));
+                formdata.append("selectUser",JSON.stringify(app.selectUser));
                 $.ajax({
                     type : 'post',
                     url : "/info_system/addBlog",

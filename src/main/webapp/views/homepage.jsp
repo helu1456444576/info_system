@@ -20,14 +20,14 @@
     <link rel="stylesheet" type="text/css" href="../css/layout.css">
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .ivu-layout-content{
-            height:900px
+        .iframeLayout{
+            height:calc(100% - 92px);
         }
     </style>
 </head>
 <body>
-<div id="app">
-    <layout>
+<div id="app" style="height: 100%">
+    <layout style="height: 100%">
         <i-header>
             <i-menu mode="horizontal" theme="dark" >
                 <row>
@@ -44,13 +44,13 @@
                 </row>
             </i-menu>
         </i-header>
-        <layout>
+        <layout class="iframeLayout">
             <sider hide-trigger style="background: #fff">
                 <i-menu active-name="1-2" theme="light" width="auto" :open-names="['1']" @on-select="turnPage">
                     <div id="user" >
                         <row>
                             <i-col span="10">
-                                <img id="user-img" src="../img/cat.jpg" alt="太帅 无法加载">
+                               <a @click="turnToDetailUser()"><img id="user-img" src="../img/cat.jpg" alt="太帅 无法加载"></a>
                             </i-col>
                             <i-col span="14"><p>${username}</p></i-col>
                         </row>
@@ -94,14 +94,14 @@
                     </menu-item>
                 </i-menu>
             </sider>
-            <layout style="padding: 0 24px 24px">
-                <p style="font-size: 20px; font-weight: bold; margin: 20px 10px;">您好，${username} !</p>
-                <i-content>
-                    <iframe :src="page" frameborder="no" width="100%" height="900px">
+            <layout  style="height: 100%">
+                <%--<p style="font-size: 20px; font-weight: bold; margin: 20px 10px;">您好，${username} !</p>--%>
+                <i-content style="height: calc(100% - 122px);width:90%;margin-left:5%;margin-top:60px">
+                    <iframe :src="page" frameborder="no" width="100%" height="100%">
 
                     </iframe>
                 </i-content>
-                <i-footer>
+                <i-footer style="height: 62px">
                     <p style="text-align: center">Copyright &copy; 1997-2018 FuRui. All Rights Reserves</p>
                 </i-footer>
             </layout>
@@ -133,6 +133,8 @@
 
     });
 
+
+
     function turnPage(name){
         if(name=="home"){
             //主页面
@@ -145,6 +147,12 @@
         }else if(name=="myComment"){
             app.page="<%=basePath%>/info_system/myComment"
         }
+    }
+
+    //跳转到用户详细页面
+    function turnToDetailUser(){
+        console.log("进入方法");
+        app.page="<%=basePath%>/info_system/otherBlogs?userId="+'${userId}';
     }
 </script>
 

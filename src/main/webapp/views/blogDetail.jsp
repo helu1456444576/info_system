@@ -18,14 +18,19 @@
     <link rel="stylesheet" type="text/css" href="//unpkg.com/iview/dist/styles/iview.css">
     <link rel="stylesheet" type="text/css" href="../css/layout.css">
     <link href="../css/bootstrap.min.css" rel="stylesheet">
-
+<style>
+    .goods-item-img{
+        width:550px;
+        height:500px;
+    }
+</style>
 </head>
 <body>
 <div v-cloak id="app">
     <div style="border:solid 0.1pt;padding:10px;border-color: #E5DDDB;width:90%;margin-left:5%">
         <Row style="margin-top:30px;margin-left:20px">
             <i-col span="3" style="text-align: right">
-                <Avatar icon="ios-person" size="large" />
+                <a @click="turnToDetailUser(userId)"><Avatar icon="ios-person" size="large" /></a>
             </i-col>
             <i-col span="18" offset="1">
                 <Row>
@@ -97,7 +102,7 @@
         <div v-for="(item,index) in commentList">
             <Row>
                 <i-col span="3" style="text-align: right">
-                    <Avatar shape="square" icon="ios-person" />
+                   <a @click="turnToDetailUser(item.user.id)"><Avatar shape="square" icon="ios-person" /></a>
                 </i-col>
                 <i-col span="18" offset="1">
                     <Row>
@@ -249,6 +254,11 @@
 
     }
 
+    //跳转到用户详细页面
+    function turnToDetailUser(userId){
+        console.log(userId);
+        parent.app.page="<%=basePath%>/info_system/otherBlogs?userId="+userId;
+    }
 
 </script>
 </body>

@@ -1,9 +1,6 @@
 package com.info_system.dao;
 
-import com.info_system.entity.Blog;
-import com.info_system.entity.Comment;
-import com.info_system.entity.LikeBlog;
-import com.info_system.entity.LikeComment;
+import com.info_system.entity.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -36,4 +33,17 @@ public interface BlogDao {
 
      List<Comment> getMyComments(@Param("userId") int userId);
      int updateCommentDeleteFlag(@Param("deleteFlag") int deleteFlag,@Param("commentId") int commentId);
+
+     User getDetailUserById(int userId);
+
+     int getFansNumByUserId(int userId);
+
+     int getBlogNumByUserId(int userId);
+
+     List<User> getAllUser();
+
+     int addInform(Inform inform);
+
+     int addMessage(Message message);
+
 }

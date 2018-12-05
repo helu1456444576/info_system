@@ -81,6 +81,7 @@
                        app.commentList[i].deleteFlag=false;
                    }
                }
+               console.log(app.commentList);
            }
        },null,false);
     });

@@ -1,4 +1,6 @@
 package com.info_system.service;
+
+
 import com.alibaba.fastjson.JSONObject;
 import com.info_system.dao.BlogDao;
 import com.info_system.dto.AjaxMessage;
@@ -7,6 +9,7 @@ import com.info_system.entity.*;
 
 
 import com.info_system.utils.FileUtils;
+import net.sf.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +28,10 @@ public class BlogService {
     public Object addBlog(HttpSession session, HttpServletRequest request){
         User user= (User) session.getAttribute("userSession");
         String param=request.getParameter("blog");
+        String selectUser=request.getParameter("selectUser");
+        JSONArray jsonArray=JSONArray.fromObject(selectUser);
+        List<Integer> userList=JSONArray.toList(jsonArray,Integer.class);
+
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         MultipartFile file=multipartRequest.getFile("uploadFile");
         String fileName="";
@@ -60,8 +67,23 @@ public class BlogService {
             Date dateTime=new Date();
             blog.setBlogTime(dateTime);
             blog.setDeleteFlag(0);
-            if(blogDao.addBlog(blog)>0)
+            int blogId=blogDao.addBlog(blog);
+            if(blogId>=0)
             {
+                //添加关注的人到数据库
+                for(int i=0;i<userList.size();i++){
+                    Inform inform=new Inform();
+                    inform.setBlogId(blogId);
+                    inform.setUserId(userList.get(i));
+                    blogDao.addInform(inform);
+                    //给每个被@的用户发送一条消息
+                    Message message=new Message();
+                    message.setMessageType(3);
+                    message.setSenderId(user.getId());
+                    message.setUserId(userList.get(i));
+                    message.setBlogId(blogId);
+                    blogDao.addMessage(message);
+                }
                 return new AjaxMessage().Set(MsgType.Success,"添加成功！",null);
             }
             else
@@ -133,4 +155,20 @@ public class BlogService {
     public List<Comment> getMyComments(int userId){
         return blogDao.getMyComments(userId);
     }
+
+    public User getDetailUserById(int userId){
+        return blogDao.getDetailUserById(userId);
+    }
+
+    public int getFansNumByUserId(int userId){
+        return blogDao.getFansNumByUserId(userId);
+    }
+    public int getBlogNumByUserId(int userId){
+        return blogDao.getBlogNumByUserId(userId);
+    }
+
+    public List<User> getAllUser(){
+        return blogDao.getAllUser();
+    }
+
 }

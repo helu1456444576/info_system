@@ -1,6 +1,7 @@
 package com.info_system.entity;
 
 import java.util.Date;
+import java.util.List;
 
 public class Blog {
     private int blogId;
@@ -14,6 +15,17 @@ public class Blog {
 
     private boolean hasLike;//判断当前用户是否有点赞该博文
     private boolean hasComment;//判断当前用户是否有评论该博文
+
+    public List<User> getInformUser() {
+        return informUser;
+    }
+
+    public void setInformUser(List<User> informUser) {
+        this.informUser = informUser;
+    }
+
+    private List<User> informUser;
+
 
     public boolean isHasLike() {
         return hasLike;
@@ -119,6 +131,7 @@ public class Blog {
                 ", blogPic='" + blogPic + '\'' +
                 ", hasLike=" + hasLike +
                 ", hasComment=" + hasComment +
+                ", informUser=" + informUser +
                 ", likeCount=" + likeCount +
                 ", commentCount=" + commentCount +
                 '}';

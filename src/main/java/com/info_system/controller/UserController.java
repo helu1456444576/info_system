@@ -67,6 +67,7 @@ public class UserController {
             User user=userService.getUserByName(username);
             session.setAttribute("userSession",user);
             model.addAttribute("username", username);
+            model.addAttribute("userId",user.getId());
             return "homepage";
         }
         else {
