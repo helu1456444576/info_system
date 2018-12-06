@@ -45,9 +45,10 @@
     </select>
 
     <!--unFollow-->
-    <select id="listUnFollow" parameterType="java.lang.String" resultMap="unFollowMap">
-        select * from t_user where user_name like #{0};
+    <select id="listUnFollow" resultMap="unFollowMap">
+        select * from t_user where user_name like #{username} and user_id!=#{userId} and user_id not in (select t_follow.user_id from t_follow where t_follow.follower_id=#{userId});
     </select>
+
 
     <!--fansNum-->
     <select id="getFansNum" parameterType="java.lang.Integer" resultType="java.lang.Integer">

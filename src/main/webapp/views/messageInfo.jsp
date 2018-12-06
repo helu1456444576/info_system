@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
@@ -21,7 +22,33 @@
 </head>
 <body>
 <div v-cloak id="app">
-    <i-table @on-row-dblclick="clickRow" stript :columns="columnMessage" :data="dataMessage"></i-table>
+    <%--<i-table @on-row-dblclick="clickRow" stript :columns="columnMessage" :data="dataMessage"></i-table>--%>
+        <table class="table table-hover">
+            <tr>
+                <th>序号</th>
+                <th>消息内容</th>
+            </tr>
+            <tr v-for="(item, index) in dataMessage">
+                <td v-if="item.messageType==1">{{index+1}}</td>
+                <td v-if="item.messageType==1">管理员<a @click="turnToDetailUser(item)" style="">@{{item.senderName}}</a>限制了您的权限</td>
+                <td v-if="item.messageType==2">{{index+1}}</td>
+                <td v-if="item.messageType==2">管理员<a @click="turnToDetailUser(item)" style="">@{{item.senderName}}</a>恢复了您的权限</td>
+                <td v-if="item.messageType==3">{{index+1}}</td>
+                <td v-if="item.messageType==3">用户<a @click="turnToDetailUser(item)" style="">@{{item.senderName}}</a>在博文<a @click="turnToDetail(item)" style="">@{{item.blogId}}</a>中@了您</td>
+                <td v-if="item.messageType==4">{{index+1}}</td>
+                <td v-if="item.messageType==4">管理员<a @click="turnToDetailUser(item.senderId)" style="">@{{item.senderName}}</a>删除了您的博文<a @click="turnToDetail(item.blogId)" style="">@{{item.blogId}}</a></td>
+                <td v-if="item.messageType==5">{{index+1}}</td>
+                <td v-if="item.messageType==5">管理员<a @click="turnToDetailUser(item.senderId)" style="">@{{item.senderName}}</a>恢复了您的博文<a @click="turnToDetail(item.blogId)" style="">@{{item.blogId}}</a></td>
+            </tr>
+            <%--<c:forEach var="msg" items="${app.}">--%>
+                <%--<c:if test="${msg.message_type==1}">--%>
+                    <%--<tr>--%>
+                        <%--<th>您已被<a @click="turnToDetailUser(msg.senderId)" style="">@{{msg.senderName}}</a>限制权限</th>--%>
+                    <%--</tr>--%>
+                <%--</c:if>--%>
+
+            <%--</c:forEach>--%>
+        </table>
 </div>
 <script src="../js/ajax.js"></script>
 <script src="../js/jquery-2.1.1.min.js"></script>
@@ -49,12 +76,12 @@
             ],
             dataMessage:[]
         },
-        methods: {
-            clickRow: function(row) {
-                console.log(row);
-                turnToDetailUser(row);
-            }
-        }
+        // methods: {
+        //     clickRow: function(row) {
+        //         console.log(row);
+        //         turnToDetailUser(row);
+        //     }
+        // }
     })
 
     $(document).ready(function () {

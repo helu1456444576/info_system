@@ -1,7 +1,7 @@
 package com.info_system.dao;
 
 import com.info_system.entity.Follow;
-import com.info_system.entity.User;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,9 +21,8 @@ public interface FollowDao {
 
     /**
      * 我未关注的人
-     * @param username
      */
-    List<Follow> listUnFollow(String username);
+    List<Follow> listUnFollow(@Param("username") String username, @Param("userId") int userId);
 
     /**
      * 删除关注

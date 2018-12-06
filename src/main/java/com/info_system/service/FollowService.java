@@ -2,7 +2,6 @@ package com.info_system.service;
 
 import com.info_system.dao.FollowDao;
 import com.info_system.entity.Follow;
-import com.info_system.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +34,13 @@ public class FollowService {
     /**
      * 我未关注的人
      * @param username
+     * @param userId
      */
-    public List<Follow> listUnFollow(String username) {
+    public List<Follow> listUnFollow(String username, int userId) {
         System.out.println("listUnFollow in FollowService");
         username = '%'+username+'%';
         System.out.println(username);
-        return followDao.listUnFollow(username);
+        return followDao.listUnFollow(username,userId);
     }
 
 

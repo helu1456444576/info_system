@@ -100,7 +100,7 @@ public class FollowController {
     ) {
         User user=(User) session.getAttribute("userSession");
 //      获取没有关注的用户
-        List<Follow> listUnFollow=followService.listUnFollow(username);
+        List<Follow> listUnFollow=followService.listUnFollow(username,user.getId());
         for(int i=0;i<listUnFollow.size();i++) {
             System.out.println(listUnFollow.get(i).getUsername());
         }
