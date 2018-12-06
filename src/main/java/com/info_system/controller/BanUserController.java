@@ -3,8 +3,10 @@ package com.info_system.controller;
 import com.info_system.dto.AjaxMessage;
 import com.info_system.dto.MsgType;
 import com.info_system.entity.Blog;
+import com.info_system.entity.Message;
 import com.info_system.entity.User;
 import com.info_system.service.BanUserService;
+import com.info_system.service.BlogService;
 import com.info_system.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +24,10 @@ import java.util.List;
 public class BanUserController {
     @Autowired
     private BanUserService banUserService;
+    @Autowired
+    private MessageService messageService;
+    @Autowired
+    private BlogService blogService;
 
     @RequestMapping(value = "/banUser",method = RequestMethod.GET)
     public String banUser() {
@@ -60,9 +66,31 @@ public class BanUserController {
     @RequestMapping(value = "/changeUser")
     public String changeUser(
             @RequestParam("userId") int userId,
-            @RequestParam("flag") int deleteFlag
+            @RequestParam("flag") int deleteFlag,
+            HttpSession session
     ) {
+        User sender=(User) session.getAttribute("userSession");
         User user = new User(userId,deleteFlag);
+        List<Blog> blogs = banUserService.getUserAllBlogs(userId);
+        int msgType;
+        if (deleteFlag==1){
+            for (int i=0;i<blogs.size();i++){
+                blogs.get(i).setDeleteFlag(1);
+                banUserService.changeBlog(blogs.get(i));
+            }
+            msgType=2;
+            Message message = new Message(userId,sender.getId(),msgType);
+            messageService.addMessageWithoutBlog(message);
+        }
+        else {
+            for (int i=0;i<blogs.size();i++){
+                blogs.get(i).setDeleteFlag(2);
+                banUserService.changeBlog(blogs.get(i));
+            }
+            msgType=1;
+            Message message = new Message(userId,sender.getId(),msgType);
+            messageService.addMessageWithoutBlog(message);
+        }
         banUserService.changeUser(user);
         return "banUser";
     }
@@ -70,8 +98,20 @@ public class BanUserController {
     @RequestMapping(value = "/changeBlog")
     public String changeBlog(
             @RequestParam("blogId") int blogId,
-            @RequestParam("flag") int deleteFlag
+            @RequestParam("flag") int deleteFlag,
+            HttpSession session
     ) {
+        User sender=(User) session.getAttribute("userSession");
+        int userId = banUserService.getUserIdByBlogId(blogId);
+        int msgType;
+        if(deleteFlag==1)
+            msgType=4;
+        else
+            msgType=5;
+        Message message = new Message(userId,sender.getId(),msgType,blogId);
+        messageService.addMessage(message);
+        if (deleteFlag==0)
+            deleteFlag=2;
         Blog blog = new Blog(blogId,deleteFlag);
         banUserService.changeBlog(blog);
         return "deletedBlog";

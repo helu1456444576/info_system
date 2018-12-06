@@ -18,6 +18,13 @@ public class Message {
         this.messageType = messageType;
     }
 
+    public Message(int userId, int senderId, int messageType, int blogId) {
+        this.userId = userId;
+        this.senderId = senderId;
+        this.messageType = messageType;
+        this.blogId = blogId;
+    }
+
     public int getBlogId() {
         return blogId;
     }

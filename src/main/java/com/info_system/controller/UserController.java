@@ -62,8 +62,8 @@ public class UserController {
             HttpSession session)
     {
         System.out.println("UserController，登录...");
-        String result = userService.loginCheck(username,password);
-        if(result.equals("success")) {
+        int result = userService.loginCheck(username,password);
+        if(result==1) {
             User user=userService.getUserByName(username);
             session.setAttribute("userSession",user);
             model.addAttribute("username", username);
@@ -71,8 +71,14 @@ public class UserController {
             model.addAttribute("userId",user.getId());
             return "homepage";
         }
-        else {
-            model.addAttribute("hint",result);
+        else if (result == 2) {
+            model.addAttribute("hint", "密码错误");
+            return "login";
+        } else if (result == 3) {
+            model.addAttribute("hint", "用户名错误");
+            return "login";
+        }else{
+            model.addAttribute("hint", "未知错误");
             return "login";
         }
     }

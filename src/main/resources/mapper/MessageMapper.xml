@@ -7,7 +7,7 @@
         <id property="messageId" column="message_id"></id>
         <result property="userId" column="user_id"></result>
         <result property="senderId" column="sender_id"></result>
-        <result property="messageType" column="message_id"></result>
+        <result property="messageType" column="message_type"></result>
         <association property="senderName" column="sender_id" javaType="java.lang.Integer" select="com.info_system.dao.MessageDao.getSenderName"/>
     </resultMap>
 

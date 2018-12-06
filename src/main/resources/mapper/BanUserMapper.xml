@@ -22,15 +22,23 @@
     </resultMap>
 
     <select id="listUser" resultMap="UserMap">
-        select * from t_user;
+        select * from t_user where admin_flag!=1;
     </select>
 
     <select id="listBlog" resultMap="BlogMap">
         select * from t_blog;
     </select>
 
+    <select id="getUserAllBlogs" resultMap="BlogMap">
+        select * from t_blog where user_id=#{0};
+    </select>
+
     <select id="getUsernameById" resultType="java.lang.String">
         select user_name from t_user where user_id=#{0};
+    </select>
+
+    <select id="getUserIdByBlogId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select user_id from t_blog where blog_id=#{0};
     </select>
 
     <update id="changeBlog" parameterType="com.info_system.entity.Blog">

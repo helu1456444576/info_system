@@ -34,26 +34,6 @@ public class MessageController {
         User user=(User) session.getAttribute("userSession");
         int userId = user.getId();
         List<Message> listMessage= messageService.listMessage(userId);
-        for (int i=0;i<listMessage.size();i++) {
-            switch (listMessage.get(i).getMessageType()) {
-                //管理员拉黑
-                case 1:
-                    listMessage.get(i).setMessageContent("您已被管理员拉黑");
-                    break;
-                //管理员恢复
-                case 2:
-                    listMessage.get(i).setMessageContent("您已被管理员恢复权限");
-                    break;
-                //用户@
-                case 3:
-                    listMessage.get(i).setMessageContent("该用户@了您");
-                    break;
-                //用户点赞
-                case 4:
-                    listMessage.get(i).setMessageContent("该用户给您点赞");
-                    break;
-            }
-        }
         if (listMessage.size()>=0) {
             return new AjaxMessage().Set(MsgType.Success,listMessage);
         }

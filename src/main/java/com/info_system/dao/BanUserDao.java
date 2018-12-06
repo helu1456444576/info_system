@@ -12,4 +12,6 @@ public interface BanUserDao {
     List<Blog> listBlog();
     void changeUser(User user);
     void changeBlog(Blog blog);
+    int getUserIdByBlogId(int blogId);
+    List<Blog> getUserAllBlogs(int userId);
 }

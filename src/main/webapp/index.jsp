@@ -15,13 +15,13 @@
     <div class="htmleaf-container">
         <div class="wrapper">
             <div class="container">
-                <h1>Welcome</h1>
+                <h1>小型微博系统·登录</h1>
 
                 <form class="form" action="/login" method="post">
-                    <input type="text" placeholder="Username" name="username">
-                    <input type="password" placeholder="Password" name="password">
-                    <button type="submit" id="login-button" onclick="">Login</button><br>
-                    <button id="register-button" style="padding: 0;"><a href="/register" style="display: block; width: 100%; padding: 10px 15px;">Register</a></button>
+                    <input type="text" placeholder="用户名" name="username">
+                    <input type="password" placeholder="密码" name="password">
+                    <button type="submit" id="login-button" onclick="">登录</button><br>
+                    <button id="register-button" style="padding: 0;"><a href="/register" style="display: block; width: 100%; padding: 10px 15px;">注册</a></button>
                 </form>
                 <br>
             </div>

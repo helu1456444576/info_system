@@ -44,7 +44,7 @@ public class UserService {
      * @param username
      * @param password
      */
-    public String loginCheck(String username, String password) {
+    public int loginCheck(String username, String password) {
 
         System.out.println("loginCheck in UserService");
         int rs =userDao.checkUser(username);
@@ -53,11 +53,11 @@ public class UserService {
             String pw =userDao.checkLogin(username);
             if(pw.equals(password))
             {
-                return "success";
+                return 1;
             }
-            else return "password error";
+            else return 2;
         }
-        else return "username error";
+        else return 3;
     }
 
     /**

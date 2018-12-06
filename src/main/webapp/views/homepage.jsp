@@ -15,7 +15,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
-    <title>信息发布系统</title>
+    <title>小型微博系统</title>
     <link rel="stylesheet" type="text/css" href="//unpkg.com/iview/dist/styles/iview.css">
     <link rel="stylesheet" type="text/css" href="../css/layout.css">
     <link href="../css/bootstrap.min.css" rel="stylesheet">
@@ -32,7 +32,7 @@
             <i-menu mode="horizontal" theme="dark" >
                 <row>
                     <i-col span="10">
-                        <div class="layout-logo"><a href="javascript:void(0);" onclick="container.trans('homepage')">信 息 发 布 系 统</a></div>
+                        <div class="layout-logo"><a href="javascript:void(0);" onclick="container.trans('homepage')">小 型 微 博 系 统</a></div>
                     </i-col>
                     <i-col offset="12" span="2">
                         <div class="layout-nav">
@@ -103,7 +103,7 @@
                     </iframe>
                 </i-content>
                 <i-footer style="height: 62px">
-                    <p style="text-align: center">Copyright &copy; 1997-2018 FuRui. All Rights Reserves</p>
+                    <p style="text-align: center">Copyright &copy; 1997-2018 MicroBlogMS. All Rights Reserves</p>
                 </i-footer>
             </layout>
 

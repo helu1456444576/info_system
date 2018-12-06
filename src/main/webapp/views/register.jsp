@@ -17,19 +17,19 @@
 <div class="htmleaf-container">
     <div class="wrapper">
         <div class="container">
-            <h1>Register</h1>
+            <h1>小型微博系统·注册</h1>
 
             <form class="form" action="/register" method="post">
-                <input type="text" placeholder="Username" name="username">
-                <input type="password" placeholder="Password" name="password">
-                <input type="password" placeholder="Password Again" name="repassword">
-                <input type="text" placeholder="Name" name="name">
+                <input type="text" placeholder="用户名" name="username">
+                <input type="password" placeholder="密码" name="password">
+                <input type="password" placeholder="验证密码" name="repassword">
+                <input type="text" placeholder="姓名" name="name">
                 <div id="choose-sex">
-                    <input class="sel" type="radio" name="sex" value="男" checked><span>Male</span>
-                    <input class="sel" type="radio" name="sex" value="女"><span>Female</span>
+                    <input class="sel" type="radio" name="sex" value="男" checked><span>先生</span>
+                    <input class="sel" type="radio" name="sex" value="女"><span>女士</span>
                 </div>
-                <button type="submit" id="confirm-button" onclick="">Confirm</button><br>
-                <button id="return-button" style="padding: 0;"><a href="/login" style="display: block; width: 100%; padding: 10px 15px;">Return</a></button>
+                <button type="submit" id="confirm-button" onclick="">确定</button><br>
+                <button id="return-button" style="padding: 0;"><a href="/login" style="display: block; width: 100%; padding: 10px 15px;">返回</a></button>
 
             </form>
             <div><br>${hint}</div>

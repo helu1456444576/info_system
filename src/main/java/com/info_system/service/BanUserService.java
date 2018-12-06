@@ -24,7 +24,10 @@ public class BanUserService {
         System.out.println("listBlog in BanUserService");
         return banUserDao.listBlog();
     }
-
+    public List<Blog> getUserAllBlogs(int userId) {
+        System.out.println("getUserAllBlogs in BanUserService");
+        return banUserDao.getUserAllBlogs(userId);
+    }
     /**
      *
      * @param user
@@ -41,5 +44,10 @@ public class BanUserService {
     public void changeBlog(Blog blog) {
         System.out.println("changeBlog in BanUserService");
         banUserDao.changeBlog(blog);
+    }
+
+    public int getUserIdByBlogId(int blogId) {
+        System.out.println("getUserIdByBlogId in BanUserService");
+        return banUserDao.getUserIdByBlogId(blogId);
     }
 }
