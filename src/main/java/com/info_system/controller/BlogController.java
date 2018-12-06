@@ -5,18 +5,20 @@ import com.info_system.dto.MsgType;
 import com.info_system.entity.*;
 import com.info_system.service.BlogService;
 import com.info_system.service.UserService;
+import com.info_system.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.text.Collator;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/info_system")
@@ -47,29 +49,68 @@ public class BlogController {
     public String myComment(HttpServletRequest request,HttpSession session){
         return "myComment";
     }
+
+    @RequestMapping(value="/imgImport")
+    public String imgImport(HttpServletRequest request){
+        return "imgImport";
+    }
+
     @RequestMapping(value="/addBlog")
     @ResponseBody
     public Object addBlog(HttpServletRequest request, Model model, HttpSession session){
         return blogService.addBlog(session,request);
     }
 
+    @RequestMapping(value="/setImgImport")
+    @ResponseBody
+    public Object setImgImport(HttpServletRequest request,HttpSession session,Model model){
+        User user=(User) session.getAttribute("userSession");
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+        MultipartFile file=multipartRequest.getFile("uploadFile");
+        String fileName="";
+        if(file!=null)
+        {
+            String directory="/upload/Avatar/"+user.getId()+"/";
+            fileName= FileUtils.writeToServer(request,directory,file);
+        }
+
+        if(blogService.changeAvatar(fileName,user.getId())>=0){
+            user.setUserPic(fileName);
+            return new AjaxMessage().Set(MsgType.Success,user);
+        }
+        return new AjaxMessage().Set(MsgType.Error,null);
+    }
 
     @RequestMapping(value="/otherBlogs")
     public String otherBlogs(Model model,@RequestParam("userId") int userId){
         model.addAttribute("userId",userId);
+        User user=userService.getUserById(userId);
+        if(user.getDeleteFlag()==0){
+            return "blackUser";
+        }
         return "otherBlogs";
     }
 
     @RequestMapping(value="/getOtherBlogs")
     @ResponseBody
-    public Object getOtherBlogs(@RequestParam("userId") int userId){
+    public Object getOtherBlogs(@RequestParam("userId") int userId,HttpSession session){
+        User mainUser=(User)session.getAttribute("userSession");
+        int mainId=mainUser.getId();
         User user=blogService.getDetailUserById(userId);
         List<Blog> blogList=blogService.getMyAllBlogs(userId);
-        HashMap<String,Object> map=new HashMap<String, Object>();
 
+        //判断该用户是否已被当前用户关注
+        int focusNum=blogService.getFocucNum(mainId,userId);
+        HashMap<String,Object> map=new HashMap<String, Object>();
+        boolean hasFocus=false;
         if(user!=null){
             map.put("user",user);
             map.put("blogList",blogList);
+            map.put("mainId",mainId);
+            if(focusNum>0){
+                hasFocus=true;
+            }
+            map.put("hasFocus",hasFocus);
             return new AjaxMessage().Set(MsgType.Success,map);
         }
 
@@ -77,27 +118,47 @@ public class BlogController {
 
     }
 
+    @RequestMapping(value="/addFocus")
+    @ResponseBody
+    public Object addFocus(HttpServletRequest request){
+        int mainId=Integer.parseInt(request.getParameter("mainId"));
+        int followerId=Integer.parseInt(request.getParameter("followerId"));
+        if(blogService.addFocus(mainId,followerId)>=0){
+            return new AjaxMessage().Set(MsgType.Success,null);
+        }
+        return new AjaxMessage().Set(MsgType.Error,null);
+    }
+
     @RequestMapping(value="/getAllBlogs")
     @ResponseBody
     public Object getAllBlogs(HttpSession session){
-        List<Blog> blogList=blogService.getAllBlogs();
+        List<Blog> timeBlogList=blogService.getAllBlogs();
         User user=(User) session.getAttribute("userSession");
         int  userId=user.getId();
-        for(int i=0;i<blogList.size();i++){
-            int blogId=blogList.get(i).getBlogId();
+        for(int i=0;i<timeBlogList.size();i++){
+            int blogId=timeBlogList.get(i).getBlogId();
             if(blogService.getLikeNumByUser(blogId,userId)>0){
-                blogList.get(i).setHasLike(true);
+                timeBlogList.get(i).setHasLike(true);
             }else{
-                blogList.get(i).setHasLike(false);
+                timeBlogList.get(i).setHasLike(false);
             }
             if(blogService.getCommentNumByUser(blogId,userId)>0){
-                blogList.get(i).setHasComment(true);
+                timeBlogList.get(i).setHasComment(true);
             }else{
-                blogList.get(i).setHasComment(false);
+                timeBlogList.get(i).setHasComment(false);
             }
         }
-        if(blogList.size()>=0){
-            return new AjaxMessage().Set(MsgType.Success,blogList);
+        if(timeBlogList.size()>=0){
+            List<Blog> hotBlogList=new ArrayList<Blog>();
+            for(int i=0;i<timeBlogList.size();i++){
+                hotBlogList.add(timeBlogList.get(i));
+            }
+            Collections.sort(hotBlogList);
+
+            HashMap<String,Object> map=new HashMap<String, Object>();
+            map.put("hotBlogList",hotBlogList);
+            map.put("timeBlogList",timeBlogList);
+            return new AjaxMessage().Set(MsgType.Success,map);
         }
         return new AjaxMessage().Set(MsgType.Error,null);
     }
@@ -115,7 +176,12 @@ public class BlogController {
         List<Comment> commentList=blogService.getCommentByBlogId(blogId);
         User user=(User) session.getAttribute("userSession");
         int  userId=user.getId();
-
+        int fucosNum=blogService.getFocucNum(userId,blog.getUser().getId());
+        boolean hasFocus=false;
+        if(fucosNum>0){
+            //已关注
+            hasFocus=true;
+        }
         for(int i=0;i<commentList.size();i++){
             if(blogService.getCommentLikeCount(commentList.get(i).getCommentId())>0){
                 commentList.get(i).setHasComment(true);
@@ -137,6 +203,7 @@ public class BlogController {
         map.put("blog",blog);
         map.put("commentList",commentList);
         map.put("userId",userId);
+        map.put("hasFocus",hasFocus);
         if(map!=null){
             return new AjaxMessage().Set(MsgType.Success,map);
         }
@@ -295,4 +362,6 @@ public class BlogController {
         }
         return new AjaxMessage().Set(MsgType.Error,null);
     }
+
+
 }

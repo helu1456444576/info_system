@@ -3,7 +3,7 @@ package com.info_system.entity;
 import java.util.Date;
 import java.util.List;
 
-public class Blog {
+public class Blog implements Comparable<Blog>{
     private int blogId;
     private String blogTitle;
     private String blogContent;
@@ -12,6 +12,23 @@ public class Blog {
     private int deleteFlag;
 
     private String blogPic;
+    public Blog() {
+        super();
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public Blog(int blogId, int deleteFlag) {
+        this.blogId = blogId;
+        this.deleteFlag = deleteFlag;
+    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    private String username;
 
     private boolean hasLike;//判断当前用户是否有点赞该博文
     private boolean hasComment;//判断当前用户是否有评论该博文
@@ -129,11 +146,17 @@ public class Blog {
                 ", blogTime=" + blogTime +
                 ", deleteFlag=" + deleteFlag +
                 ", blogPic='" + blogPic + '\'' +
+                ", username='" + username + '\'' +
                 ", hasLike=" + hasLike +
                 ", hasComment=" + hasComment +
                 ", informUser=" + informUser +
                 ", likeCount=" + likeCount +
                 ", commentCount=" + commentCount +
                 '}';
+    }
+
+//排序方法
+    public int compareTo(Blog o) {
+        return likeCount<o.getLikeCount()?1:(likeCount>o.getLikeCount()?-1:0);
     }
 }

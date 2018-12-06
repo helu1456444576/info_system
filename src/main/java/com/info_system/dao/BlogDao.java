@@ -26,7 +26,7 @@ public interface BlogDao {
      Comment getCommentByCommentId(int commentId);
      int addBlogLike(LikeBlog likeBlog);
 
-     int deleteBlogLike(int blogId,int userId);
+     int deleteBlogLike( @Param("blogId") int blogId,@Param("userId") int userId);
      List<Blog>getMyAllBlogs(int userId);
 
      int updateDeleteFlag(@Param("deleteFlag") int deleteFlag,@Param("blogId") int blogId);
@@ -46,4 +46,9 @@ public interface BlogDao {
 
      int addMessage(Message message);
 
+     int getFocusNum(@Param("mainId") int mainId,@Param("followerId") int followerId);
+
+     int addFocus(@Param("mainId") int mainId,@Param("followerId") int followerId);
+
+     int changeAvatar(@Param("userPic") String userPic,@Param("userId") int userId);
 }

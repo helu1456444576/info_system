@@ -31,10 +31,10 @@
 <body>
 
 <div id="app" v-cloak>
-    <Row style="width:80%;margin-left:10%">
+    <Row>
             <i-col span="2" style="text-align: right">
                 <div style="margin-right:10px">
-                    <Avatar icon="ios-person" size="large" />
+                    <Avatar icon="ios-person" size="large" :src="'<%=basePath%>'+user.userPic"/>
                 </div>
 
             </i-col>
@@ -43,15 +43,18 @@
                     <i-col span="2">
                         <span style="font-size: 17pt"> {{user.username}}</span>
                     </i-col>
-                    <i-col span="2" offset="20">
-                        <i-button style="width:100%">关注</i-button>
+                    <i-col span="2" offset="20" v-if="mainId!=userId&&hasFocus==false">
+                        <i-button style="width:100%" @click="addFocus()">关注</i-button>
+                    </i-col>
+                    <i-col span="2" offset="20" v-if="hasFocus">
+                        <i-button style="width:100%" disabled>已关注</i-button>
                     </i-col>
                 </Row>
                 <Row style="margin-top: 10px">
-                    <i-col span="2">
+                    <i-col span="3">
                         <span style="font-size: 12pt">粉丝数：{{user.fansNum}}</span>
                     </i-col>
-                    <i-col span="2">
+                    <i-col span="3">
                         <span style="font-size: 12pt">博客数：{{user.blogNum}}</span>
                     </i-col>
                 </Row>
@@ -79,7 +82,7 @@
                                 <div>
                                     <Row>
                                         <i-col span="1">
-                                            <Avatar icon="ios-person" size="small" src="../img/cat.jpg" />
+                                            <Avatar icon="ios-person" size="small" :src="'<%=basePath%>'+item.user.userPic" />
                                         </i-col>
                                         <i-col span="1">
                                             <span style="font-size: 10pt">{{item.user.username}}</span>
@@ -133,12 +136,15 @@
     var app = new Vue({
         el: "#app",
         data:{
+            mainId:'',
             userId:'${userId}',
+            hasFocus:false,
             user:{
                 id:"",
                 username:"",
                 fansNum:"",
-                blogNum:""
+                blogNum:"",
+                userPic:""
             },
             blogList:[]
         }
@@ -150,12 +156,16 @@
         ajaxGet(url,function(res){
             if(res.code=="success"){
                 app.user=res.data.user;
-
+                app.mainId=res.data.mainId;
                 app.blogList=res.data.blogList;
+                app.hasFocus=res.data.hasFocus;
                 for(var i=0;i<app.blogList.length;i++){
                     //将时间戳转换为日期
                     app.blogList[i].blogTime=getTime(app.blogList[i].blogTime);
                 }
+
+                console.log(app.hasFocus);
+                console.log(res.data.hasFocus);
             }
         },null,false)
     });
@@ -187,6 +197,21 @@
     function turnToDetail(item){
         console.log("进入方法");
         parent.app.page="<%=basePath%>/info_system/blogDetail?blogId="+item.blogId;
+    }
+
+    //添加关注
+    function addFocus(){
+        var url="<%=basePath%>/info_system/addFocus";
+        var data={
+            mainId:app.mainId,
+            followerId:app.userId
+        };
+        ajaxPost(url,data,function(res){
+          if(res.code=="success"){
+              app.hasFocus=true;
+              app.user.fansNum+=1;
+          }
+        },null,false);
     }
 </script>
 </body>

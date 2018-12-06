@@ -33,21 +33,21 @@
 <div v-cloak id="app" style="height:100%">
 
                 <h1>热门博客</h1>
-                <carousel v-model="value1" loop style="width:100%;margin-top:30px" autoplay>
-                    <carousel-item>
-                        <img  src="../img/cat.jpg" alt="太帅 无法加载">
-                    </carousel-item>
-                    <carousel-item>
-                        <img  src="../img/cat.jpg" alt="太帅 无法加载">
-                    </carousel-item>
-                    <carousel-item>
-                        <img  src="../img/cat.jpg" alt="太帅 无法加载">
-                    </carousel-item>
-                    <carousel-item>
-                        <img  src="../img/cat.jpg" alt="太帅 无法加载">
+                <carousel  loop style="width:90%;margin-top:30px;height: 400px" autoplay >
+                    <carousel-item v-for="hotItem in hottestList">
+                        <a @click="turnToDetail(hotItem)"><img  :src="'<%=basePath%>'+hotItem.blogPic" alt="太帅 无法加载" style="width:100%;height:100%"></a>
                     </carousel-item>
                 </carousel>
                 <hr/>
+                <radio-group v-model="sortWay" @on-change="sortWayChange">
+                    <radio label="time" >
+                        <span>按时间排序</span>
+                    </radio>
+                    <radio label="hot">
+                        <span>按热度排序</span>
+                    </radio>
+
+                </radio-group>
                 <div style="padding-top:40px">
                     <div style="width:100%;height:150px" v-for="item in allBlogList">
                         <div>
@@ -75,7 +75,7 @@
                                     <div>
                                         <Row>
                                             <i-col span="1">
-                                                <a @click="turnToDetailUser(item.user.id)"><Avatar icon="ios-person" size="small" src="../img/cat.jpg" /></a>
+                                                <a @click="turnToDetailUser(item.user.id)"><Avatar icon="ios-person" size="small" :src="'<%=basePath%>'+item.user.userPic" /></a>
                                             </i-col>
                                             <i-col span="1">
                                                 <span style="font-size: 10pt">{{item.user.username}}</span>
@@ -134,6 +134,10 @@
         data:{
             value1:0,
             allBlogList:[],
+            sortWay:"time",
+            timeBlogList:[],
+            hotBlogList:[],
+            hottestList:[],
         }
     });
 
@@ -143,12 +147,25 @@
 $(document).ready(function () {
         ajaxGet("/info_system/getAllBlogs",function(res){
             if(res.code=="success"){
-                app.allBlogList=res.data;
-                for(var i=0;i<app.allBlogList.length;i++){
+                app.timeBlogList=res.data.timeBlogList;
+                app.hotBlogList=res.data.hotBlogList;
+                for(var i=0;i<app.timeBlogList.length;i++){
                     //将时间戳转换为日期
-                    app.allBlogList[i].blogTime=getTime(app.allBlogList[i].blogTime);
+                    app.timeBlogList[i].blogTime=getTime(app.timeBlogList[i].blogTime);
+                    app.hotBlogList[i].blogTime=getTime(app.hotBlogList[i].blogTime);
                 }
-                console.log(app.allBlogList);
+                if(app.hotBlogList.length>3){
+                    app.hottestList.push(app.hotBlogList[0]);
+                    app.hottestList.push(app.hotBlogList[1]);
+                    app.hottestList.push(app.hotBlogList[2]);
+                }
+                else{
+                    for(var i=0;i<app.hotBlogList.length;i++){
+                        app.hottestList.push(app.hotBlogList[i]);
+                    }
+                }
+
+                app.allBlogList=app.timeBlogList;
             }
         },null,false);
     });
@@ -176,16 +193,29 @@ $(document).ready(function () {
 
     //跳转到微博详细页面
     function turnToDetail(item){
-
+        parent.app.title="博文详细";
         parent.app.page="<%=basePath%>/info_system/blogDetail?blogId="+item.blogId;
     }
 
     //跳转到用户详细页面
     function turnToDetailUser(userId){
         console.log("进入方法");
+        parent.app.title="他/她的主页";
         parent.app.page="<%=basePath%>/info_system/otherBlogs?userId="+userId;
     }
 
+    function sortWayChange(way){
+
+        if(way=="time"){
+            //按时间排序
+            app.allBlogList=app.timeBlogList;
+        }else{
+            //按热度排序
+            app.allBlogList=app.hotBlogList;
+
+        }
+
+    }
 
 </script>
 </body>

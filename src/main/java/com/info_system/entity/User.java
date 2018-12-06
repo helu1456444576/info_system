@@ -8,6 +8,36 @@ public class User {
     private int adminFlag;
     private int fansNum;
 
+    public String getUserPic() {
+        return userPic;
+    }
+
+    public void setUserPic(String userPic) {
+        this.userPic = userPic;
+    }
+
+    private String userPic;
+
+
+
+    public User(Integer id, int deleteFlag) {
+        this.id = id;
+        this.deleteFlag = deleteFlag;
+    }
+
+
+    public int getFollowNum() {
+        return followNum;
+    }
+
+    public void setFollowNum(int followNum) {
+        this.followNum = followNum;
+    }
+
+    private int followNum;
+
+
+
     public int getFansNum() {
         return fansNum;
     }
@@ -88,6 +118,8 @@ public class User {
                 ", deleteFlag=" + deleteFlag +
                 ", adminFlag=" + adminFlag +
                 ", fansNum=" + fansNum +
+                ", userPic='" + userPic + '\'' +
+                ", followNum=" + followNum +
                 ", blogNum=" + blogNum +
                 '}';
     }

@@ -38,8 +38,11 @@
                         <span style="font-size: 18pt">{{blog.user.userName}}</span>
                         <p>{{blog.blogTime}}</p>
                     </i-col>
-                    <i-col span="4" offset="12" v-if="userId!=blog.user.userId">
-                        <i-button style="width:100px">关注</i-button>
+                    <i-col span="2" offset="12" v-if="userId!=blog.user.userId&&hasFocus==false">
+                        <i-button style="width:100%" @click="addFocus()">关注</i-button>
+                    </i-col>
+                    <i-col span="2" offset="12" v-if="hasFocus">
+                        <i-button style="width:100%" disabled>已关注</i-button>
                     </i-col>
                 </Row>
 
@@ -50,6 +53,9 @@
                 </Row>
                 <Row>
                     <span style="font-size: 13pt">{{blog.blogContent}}</span>
+                    <template v-for="informItem in blog.informUser">
+                        <a @click="turnToDetailUser(informItem.id)">@{{informItem.username}}</a>
+                    </template>
                 </Row>
                 <Row :v-if="blog.blog_pic">
                     <img :src="'<%=basePath%>'+blog.blog_pic" class="goods-item-img">
@@ -149,10 +155,12 @@
             blogId:'${nowBlogId}',//获取当前的博客ID
             commentList:[],
             myComment:'',//我的评论
+            hasFocus:false,//是否关注该博客的发布用户
             blog:{
                 user:{
                     userId:0,
                     userName:'',
+                    userPic:''
                 },
                 blogTitle:'',
                 blogContent:'',
@@ -161,7 +169,8 @@
                 likeCount:0,
                 commentCount:0,
                 hasLike:false,
-                hasComment:false
+                hasComment:false,
+                informUser:[]
             }
         }
     });
@@ -170,7 +179,8 @@
         ajaxGet("<%=basePath%>/info_system/getBlogItem?blogId="+app.blogId,function(res){
             if(res.code=="success"){
                 app.userId=res.data.userId;
-                app.blog.user.userId=res.data.blog.user.userId;
+                app.blog.user.userId=res.data.blog.user.id;
+                app.blog.user.userPic=res.data.blog.user.userPic;
                 app.blog.user.userName=res.data.blog.user.username;
                 app.blog.blogTitle=res.data.blog.blogTitle;
                 app.blog.blogContent=res.data.blog.blogContent;
@@ -180,7 +190,8 @@
                 app.blog.hasComment=res.data.blog.hasComment;
                 app.blog.likeCount=res.data.blog.likeCount;
                 app.blog.commentCount=res.data.blog.commentCount;
-
+                app.blog.informUser=res.data.blog.informUser;
+                app.hasFocus=res.data.hasFocus;
                 for(var i=0;i<res.data.commentList.length;i++){
                     if(res.data.commentList[i].commentTime!=null){
                         res.data.commentList[i].commentTime=getTime(res.data.commentList[i].commentTime);
@@ -248,6 +259,7 @@
         ajaxPost(url,data,function(res){
             if(res.code=="success"){
                 console.log(res.data);
+                res.data.commentTime=getTime(res.data.commentTime);
                 app.commentList.push(res.data);
             }
         },null,false);
@@ -257,7 +269,21 @@
     //跳转到用户详细页面
     function turnToDetailUser(userId){
         console.log(userId);
+        parent.app.title="他/她的主页";
         parent.app.page="<%=basePath%>/info_system/otherBlogs?userId="+userId;
+    }
+
+    function addFocus(){
+        var url="<%=basePath%>/info_system/addFocus";
+        var data={
+            mainId:app.userId,
+            followerId:app.blog.user.userId
+        };
+        ajaxPost(url,data,function(res){
+            if(res.code=="success"){
+                app.hasFocus=true;
+            }
+        },null,false);
     }
 
 </script>

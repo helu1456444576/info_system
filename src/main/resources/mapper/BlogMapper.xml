@@ -31,6 +31,7 @@
         <id property="id" column="user_id"/>
         <result property="username" column="user_name"/>
         <result property="deleteFlag" column="delete_flag"/>
+        <result property="userPic" column="user_pic"/>
         <association property="fansNum" column="user_id" javaType="java.lang.Integer" select="com.info_system.dao.BlogDao.getFansNumByUserId"/>
         <association property="blogNum" column="user_id" javaType="java.lang.Integer" select="com.info_system.dao.BlogDao.getBlogNumByUserId"/>
     </resultMap>
@@ -100,7 +101,9 @@
     </select>
 
     <select id="getAllBlogs" resultMap="blogMap">
-        select * from t_blog a where a.delete_flag=1
+        select * from t_blog a where a.delete_flag=1 and a.user_id in (
+            select t_user.user_id from t_user where  t_user.delete_flag=1
+        ) order by blog_time DESC
     </select>
 
     <select id="getLikeNumByUser" resultType="java.lang.Integer">
@@ -144,11 +147,11 @@
     </insert>
 
     <delete id="deleteBlogLike">
-        delete  from t_likeblog where blog_id=#{0} and user_id=#{1}
+        delete  from t_likeblog where blog_id=#{blogId} and user_id=#{userId}
   </delete>
 
     <select id="getMyAllBlogs" resultMap="blogMap">
-        select  * from t_blog where user_id=#{0}
+        select  * from t_blog where user_id=#{0} and delete_flag=1
     </select>
 
     <update id="updateDeleteFlag">
@@ -170,4 +173,17 @@
     <insert id="addMessage" parameterType="com.info_system.entity.Message">
         insert into t_message(message_type,user_id,blog_id,sender_id) values(#{messageType},#{userId},#{blogId},#{senderId})
     </insert>
+
+    <select id="getFocusNum" resultType="java.lang.Integer">
+        select count(*) from t_follow where user_id=#{mainId} and follower_id=#{followerId}
+    </select>
+
+    <insert id="addFocus">
+        insert into t_follow (user_id,follower_id) VALUES (#{mainId},#{followerId})
+    </insert>
+
+    <update id="changeAvatar">
+        update t_user set user_pic=#{userPic} where user_id=#{userId}
+    </update>
+
 </mapper>

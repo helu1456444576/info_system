@@ -171,4 +171,17 @@ public class BlogService {
         return blogDao.getAllUser();
     }
 
+    public int getFocucNum(int mainId,int followerId){
+        return blogDao.getFocusNum(mainId,followerId);
+    }
+
+    public int addFocus(int mainId,int followerId){
+        return blogDao.addFocus(mainId, followerId);
+    }
+
+
+    public int changeAvatar(String userPic,int userId){
+        return blogDao.changeAvatar(userPic,userId);
+    }
+
 }
