@@ -74,9 +74,9 @@
                             h('i-switch', {
                                 props: {
                                     size: 'large',
-                                    value:params.deleteFlag,
-                                    'true-value':'1',
-                                    'false-value':'0'
+                                    value:params.row.deleteFlag,
+                                    'true-value':1,
+                                    'false-value':0
                                 },
                                 on: {
                                     'on-change': (value) => {

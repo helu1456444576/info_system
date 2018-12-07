@@ -34,11 +34,11 @@
                 <td v-if="item.messageType==2">{{index+1}}</td>
                 <td v-if="item.messageType==2">管理员<a @click="turnToDetailUser(item)" style="">@{{item.senderName}}</a>恢复了您的权限</td>
                 <td v-if="item.messageType==3">{{index+1}}</td>
-                <td v-if="item.messageType==3">用户<a @click="turnToDetailUser(item)" style="">@{{item.senderName}}</a>在博文<a @click="turnToDetail(item)" style="">@{{item.blogId}}</a>中@了您</td>
+                <td v-if="item.messageType==3">用户<a @click="turnToDetailUser(item)" style="">@{{item.senderName}}</a>在博文<a @click="turnToDetail(item)" style="">@{{item.blogName}}</a>中@了您</td>
                 <td v-if="item.messageType==4">{{index+1}}</td>
-                <td v-if="item.messageType==4">管理员<a @click="turnToDetailUser(item)" style="">@{{item.senderName}}</a>删除了您的博文<a @click="turnToDetail(item)" style="">@{{item.blogId}}</a></td>
+                <td v-if="item.messageType==4">管理员<a @click="turnToDetailUser(item)" style="">@{{item.senderName}}</a>删除了您的博文<a @click="turnToDetail(item)" style="">@{{item.blogName}}</a></td>
                 <td v-if="item.messageType==5">{{index+1}}</td>
-                <td v-if="item.messageType==5">管理员<a @click="turnToDetailUser(item)" style="">@{{item.senderName}}</a>恢复了您的博文<a @click="turnToDetail(item)" style="">@{{item.blogId}}</a></td>
+                <td v-if="item.messageType==5">管理员<a @click="turnToDetailUser(item)" style="">@{{item.senderName}}</a>恢复了您的博文<a @click="turnToDetail(item)" style="">@{{item.blogName}}</a></td>
             </tr>
             <%--<c:forEach var="msg" items="${app.}">--%>
                 <%--<c:if test="${msg.message_type==1}">--%>

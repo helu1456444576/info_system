@@ -32,7 +32,7 @@
             <i-menu mode="horizontal" theme="dark" >
                 <row>
                     <i-col span="10">
-                        <div class="layout-logo"><a href="javascript:void(0);" onclick="container.trans('homepage')">小 型 微 博 系 统</a></div>
+                        <div class="layout-logo"><a href="javascript:void(0);" onclick="turnPage('home')">小 型 微 博 系 统</a></div>
                     </i-col>
                     <i-col offset="12" span="2">
                         <div class="layout-nav">

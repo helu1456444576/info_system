@@ -36,17 +36,17 @@
 
     <!--我关注的人-->
     <select id="listFollow" parameterType="java.lang.Integer" resultMap="followMap">
-        select * from t_follow where follower_id = #{0};
+        select * from t_follow where follower_id = #{0} order by follow_id desc;
     </select>
 
     <!--关注我的人-->
     <select id="listFans" parameterType="java.lang.Integer" resultMap="fansMap">
-        select * from t_follow where user_id = #{0};
+        select * from t_follow where user_id = #{0} order by follow_id desc;
     </select>
 
     <!--unFollow-->
     <select id="listUnFollow" resultMap="unFollowMap">
-        select * from t_user where user_name like #{username} and user_id!=#{userId} and user_id not in (select t_follow.user_id from t_follow where t_follow.follower_id=#{userId});
+        select * from t_user where user_name like #{username} and user_id!=#{userId} and user_id not in (select t_follow.user_id from t_follow where t_follow.follower_id=#{userId}) order by user_name;
     </select>
 
 

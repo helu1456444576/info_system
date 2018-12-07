@@ -22,7 +22,7 @@
     </resultMap>
 
     <select id="listUser" resultMap="UserMap">
-        select * from t_user where admin_flag!=1;
+        select * from t_user where admin_flag!=1 order by user_name;
     </select>
 
     <select id="listBlog" resultMap="BlogMap">

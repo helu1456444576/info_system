@@ -8,6 +8,7 @@ public class Message {
     private int messageType;
     private String messageContent;
     private int blogId;
+    private String blogName;
 
     public Message() {
     }
@@ -23,6 +24,14 @@ public class Message {
         this.senderId = senderId;
         this.messageType = messageType;
         this.blogId = blogId;
+    }
+
+    public String getBlogName() {
+        return blogName;
+    }
+
+    public void setBlogName(String blogName) {
+        this.blogName = blogName;
     }
 
     public int getBlogId() {
