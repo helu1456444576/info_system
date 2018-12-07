@@ -108,8 +108,8 @@
                     success:function(rep){
                         if(rep.code=="success"){
                             app.user.userImg=null;
+                            parent.app.user=rep.data;
                             parent.app.$Message.success(rep.message);
-                            parent.changePage(1);
                         }else{
                             parent.app.$Message.error(rep.message);
                         }

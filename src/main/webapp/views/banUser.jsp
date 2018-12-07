@@ -136,10 +136,12 @@
         parent.app.page="<%=basePath%>/info_system/addFollow?username="+app.username;
     }
     function turnToDetail(item) {
+        parent.app.title="博文详细";
         parent.app.page="<%=basePath%>/info_system/blogDetail?blogId="+item.blogId;
     }
 
     function turnToDetailUser(item) {
+        parent.app.title="他/她的主页";
         parent.app.page="<%=basePath%>/info_system/otherBlogs?userId="+item.id;
     }
 

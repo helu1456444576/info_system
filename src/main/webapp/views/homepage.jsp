@@ -84,13 +84,13 @@
                         消息
                     </menu-item>
                     <%--管理员的权限--%>
-                    <menu-item name="blacklist">
+                    <menu-item name="blacklist" v-if="user.adminFlag==1">
                         <Icon type="ios-clipboard" ></Icon>
                         黑名单
                     </menu-item>
-                    <menu-item name="blackBlog">
+                    <menu-item name="blackBlog" v-if="user.adminFlag==1">
                         <Icon type="ios-trash" ></Icon>
-                       已删博文
+                       管理博文
                     </menu-item>
                 </i-menu>
             </sider>
@@ -140,7 +140,8 @@
             },
             user:{
                 userName:"",
-                userPic:""
+                userPic:"",
+                adminFlag:'${adminFlag}'
             }
 
         }
@@ -172,18 +173,23 @@
             app.page="<%=basePath%>/info_system/myComment"
         }else if(name=="focusPer") {
             //跳转到我的关注页面
+            app.title="我的关注";
             app.page="<%=basePath%>/info_system/focusPer"
         }else if(name=="focusMe") {
             //跳转到关注我的页面
+            app.title="关注我的人";
             app.page="<%=basePath%>/info_system/focusMe"
         }else if(name=="blacklist") {
             //跳转到拉黑用户页面
+            app.title="黑名单";
             app.page="<%=basePath%>/info_system/banUser"
         }else if(name=="blackBlog") {
             //跳转到已删博文页面
+            app.title="管理博文";
             app.page="<%=basePath%>/info_system/deletedBlog"
         }else if(name=="message") {
             //跳转到消息页面
+            app.title="消息";
             app.page="<%=basePath%>/info_system/messageInfo"
         }
 

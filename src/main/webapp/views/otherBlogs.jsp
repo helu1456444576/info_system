@@ -196,6 +196,7 @@
     //跳转到微博详细页面
     function turnToDetail(item){
         console.log("进入方法");
+        parent.app.title="博文详细";
         parent.app.page="<%=basePath%>/info_system/blogDetail?blogId="+item.blogId;
     }
 

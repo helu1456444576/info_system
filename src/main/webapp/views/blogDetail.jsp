@@ -30,7 +30,7 @@
     <div style="border:solid 0.1pt;padding:10px;border-color: #E5DDDB;width:90%;margin-left:5%">
         <Row style="margin-top:30px;margin-left:20px">
             <i-col span="3" style="text-align: right">
-                <a @click="turnToDetailUser(userId)"><Avatar icon="ios-person" size="large" /></a>
+                <a @click="turnToDetailUser(userId)"><Avatar icon="ios-person" size="large" :src="'<%=basePath%>'+blog.user.userPic"/></a>
             </i-col>
             <i-col span="18" offset="1">
                 <Row>
@@ -97,7 +97,7 @@
         <span style="font-size:15pt">评论</span>
         <hr/>
         <Row>
-            <i-input v-model="myComment" type="textarea" :rows="4" placeholder="发表我的评论" />
+            <i-input v-model="myComment" type="textarea" :rows="4" placeholder="发表我的评论"  :disabled="commentFlag"/>
         </Row>
        <Row>
            <i-button type="info" @click="submitMyComment" style="margin-top:15px;">发表</i-button>
@@ -108,7 +108,7 @@
         <div v-for="(item,index) in commentList">
             <Row>
                 <i-col span="3" style="text-align: right">
-                   <a @click="turnToDetailUser(item.user.id)"><Avatar shape="square" icon="ios-person" /></a>
+                   <a @click="turnToDetailUser(item.user.id)"><Avatar icon="ios-person" size="large" :src="'<%=basePath%>'+item.user.userPic"/></a>
                 </i-col>
                 <i-col span="18" offset="1">
                     <Row>
@@ -156,6 +156,7 @@
             commentList:[],
             myComment:'',//我的评论
             hasFocus:false,//是否关注该博客的发布用户
+            commentFlag:${commentFlag},
             blog:{
                 user:{
                     userId:0,
@@ -176,6 +177,7 @@
     });
 
     $(document).ready(function(){
+        console.log(app.commentFlag);
         ajaxGet("<%=basePath%>/info_system/getBlogItem?blogId="+app.blogId,function(res){
             if(res.code=="success"){
                 app.userId=res.data.userId;
@@ -201,7 +203,7 @@
                 console.log(app.commentList);
             }
         },null,false);
-    })
+    });
 
     //给博客点赞
     function doLike(){

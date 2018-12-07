@@ -76,7 +76,7 @@ public class BlogController {
 
         if(blogService.changeAvatar(fileName,user.getId())>=0){
             user.setUserPic(fileName);
-            return new AjaxMessage().Set(MsgType.Success,user);
+            return new AjaxMessage().Set(MsgType.Success,"修改成功",user);
         }
         return new AjaxMessage().Set(MsgType.Error,null);
     }
@@ -164,7 +164,14 @@ public class BlogController {
     }
 
     @RequestMapping(value="/blogDetail")
-    public String  getBlogDetail(@RequestParam("blogId") int blogId,Model model){
+    public String  getBlogDetail(@RequestParam("blogId") int blogId,Model model,HttpSession session){
+        User user=(User) session.getAttribute("userSession");
+        int flag=user.getDeleteFlag();
+        boolean commentFlag=true;
+        if(flag==1){
+            commentFlag=false;
+        }
+        model.addAttribute("commentFlag",commentFlag);
         model.addAttribute("nowBlogId",blogId);
         return "blogDetail";
     }

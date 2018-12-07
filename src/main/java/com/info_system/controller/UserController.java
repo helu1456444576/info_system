@@ -69,6 +69,7 @@ public class UserController {
             model.addAttribute("username", username);
             model.addAttribute("userPic",user.getUserPic());
             model.addAttribute("userId",user.getId());
+            model.addAttribute("adminFlag",user.getAdminFlag());
             return "homepage";
         }
         else if (result == 2) {
